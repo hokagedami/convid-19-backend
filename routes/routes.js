@@ -28,6 +28,7 @@ router.post('/xml', requestCountIncrementer, (req, res) => {
     }
     const estimatedData = estimator(req.body);
     const xmlEstimatedData = js2xmlparser.parse('estimationData', estimatedData);
+    res.type('application/xml');
     res.send(xmlEstimatedData);
   } catch (e) {
     res.status(500).json({ error: 'request cannot be processed at this time' });
