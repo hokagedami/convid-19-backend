@@ -39,6 +39,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/v1/on-convid-19', endPointRouter);
+app.use('/api/v1/on-covid-19', endPointRouter);
 
 module.exports = app;
