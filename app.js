@@ -11,7 +11,7 @@ const port = process.env.PORT || 5050;
 
 app.use(morgan('dev'));
 app.use(morgan(':method\t\t:url\t\t:status\t\t:response-time ms', {
-    stream: fs.createWriteStream(path.join(__dirname, 'server-data/access.log'), { flags: 'a' }),
+    stream: fs.createWriteStream(path.join(__dirname, 'data/access.log'), { flags: 'a' }),
     skip: (req) => req.url === '/logs'
 }));
 app.use(express.json());
