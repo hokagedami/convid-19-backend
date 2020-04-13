@@ -19,10 +19,10 @@ morgan.token('response-time', ((req, res) => {
         (res._startAt[1] - req._startAt[1]) * 1e-6;
     // return truncated value
 
-    return Math.trunc(ms) > 9 ? Math.trunc(ms) : `0${Math.trunc(ms)}`;
+    return Math.trunc(ms) > 9 ? `${Math.trunc(ms)}ms` : `0${Math.trunc(ms)}ms`;
 }));
 app.use(morgan('dev'));
-app.use(morgan(':method\t\t:url\t\t:status\t\t:response-time ms', {
+app.use(morgan(':method\t\t:url\t\t:status\t\t:response-time', {
     stream: fs.createWriteStream(path.join(__dirname, 'data/access.log'), { flags: 'a' }),
     skip: (req) => req.url === '/logs'
 }));
