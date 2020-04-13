@@ -51,8 +51,9 @@ router.get('/logs', (req, res) => {
         const json = JSON.parse(data);
         const { requestCount } = json;
         if (requestCount % 3 === 0) {
+          const logs = fs.readFileSync(path.join(__dirname, '../data/access.log'), 'utf8');
           res.type("text/plain");
-          return res.sendFile(path.join(__dirname, '../data/access.log'))
+          return res.send(logs);
         }
         fs.readFile(path.join(__dirname, '../data/access.log'), 'utf8', (err2, data2) => {
           if (err2) {
@@ -64,14 +65,16 @@ router.get('/logs', (req, res) => {
             for (let i = 0; i < toIgnore; i++) {
               split_log_String.pop();
             }
-             fs.writeFile(path.join(__dirname, '../data/access_.log'), split_log_String.join('\n'), 'utf8', (err3) => {
+            res.type("text/plain");
+            return res.send(split_log_String.join('\n'));
+             /*fs.writeFile(path.join(__dirname, '../data/access_.log'), split_log_String.join('\n'), 'utf8', (err3) => {
               if (err3) {
                 console.log(err3, 'writing access_.log');
                 return res.status(500).json({ error: 'error reading logs' });
               }
               res.type("text/plain");
               return res.sendFile(path.join(__dirname, '../data/access_.log'));
-            });
+            });*/
           }
         });
       }
