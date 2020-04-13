@@ -18,7 +18,8 @@ morgan.token('response-time', ((req, res) => {
     const ms = (res._startAt[0] - req._startAt[0]) * 1e3 +
         (res._startAt[1] - req._startAt[1]) * 1e-6;
     // return truncated value
-    return Math.trunc(ms);
+
+    return Math.trunc(ms) > 9 ? Math.trunc(ms) : `0${Math.trunc(ms)}`;
 }));
 app.use(morgan('dev'));
 app.use(morgan(':method\t\t:url\t\t:status\t\t:response-time ms', {
