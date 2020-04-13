@@ -37,39 +37,46 @@ router.post('/xml', requestCountIncrementer, (req, res) => {
 
 
 // Logs Endpoint
-// eslint-disable-next-line consistent-return
 router.get('/logs', (req, res) => {
   try {
-    // eslint-disable-next-line consistent-return
-    fs.readFile(path.join(__dirname, '../../server-data/requestCount.json'), 'utf8', (err, data) => {
+    if (!fs.existsSync(path.join(__dirname, '../data/requestCount.json'))){
+      res.type("text/plain");
+      return res.send('');
+    }
+    fs.readFile(path.join(__dirname, '../data/requestCount.json'), 'utf8', (err, data) => {
       if (err) {
+        console.log(err, 'reading requestCount.json');
         res.status(500).json({ error: 'error reading logs' });
       } else {
         const json = JSON.parse(data);
         const { requestCount } = json;
-        if (requestCount % 3 === 0) return res.sendFile(path.join(__dirname, '../../server-data/access.log'));
-        // eslint-disable-next-line consistent-return
-        fs.readFile(path.join(__dirname, '../../server-data/access.log'), 'utf8', (err2, data2) => {
+        if (requestCount % 3 === 0) {
+          res.type("text/plain");
+          return res.sendFile(path.join(__dirname, '../data/access.log'))
+        }
+        fs.readFile(path.join(__dirname, '../data/access.log'), 'utf8', (err2, data2) => {
           if (err2) {
+            console.log(err2, 'reading access.log');
             res.status(500).json({ error: 'error reading logs' });
           } else {
-            const splited = data2.split('\n').filter((log) => log.length > 0);
+            const split_log_String = data2.split('\n').filter((log) => log.length > 0);
             const toIgnore = requestCount % 3;
-            // eslint-disable-next-line no-plusplus
             for (let i = 0; i < toIgnore; i++) {
-              splited.pop();
+              split_log_String.pop();
             }
-            // eslint-disable-next-line consistent-return,no-unused-vars
-            fs.writeFile(path.join(__dirname, '../../server-data/access_.log'), splited.join('\n'), 'utf8', (err3) => {
-              if (err3) return res.status(500).json({ error: 'error reading logs' });
-              res.sendFile(path.join(__dirname, '../../server-data/access_.log'));
+             fs.writeFile(path.join(__dirname, '../data/access_.log'), split_log_String.join('\n'), 'utf8', (err3) => {
+              if (err3) {
+                console.log(err3, 'writing access_.log');
+                return res.status(500).json({ error: 'error reading logs' });
+              }
+              res.type("text/plain");
+              return res.sendFile(path.join(__dirname, '../data/access_.log'));
             });
           }
         });
       }
     });
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log(e);
     res.status(500).json({ error: 'error reading logs' });
   }
