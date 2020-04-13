@@ -29,8 +29,8 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/on-convid-19', endPointRouter);
 
-app.listen(port, () => {
+/*app.listen(port, () => {
     console.log(`Server running on port ${port}/`);
-});
+});*/
 
 module.exports = app;
